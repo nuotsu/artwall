@@ -6,6 +6,7 @@ declare global {
 			url: string
 			image?: string
 			title?: string
+			position: [x: number, y: number]
 		}
 
 		// interface Error {}

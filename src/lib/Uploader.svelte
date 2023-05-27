@@ -1,4 +1,4 @@
-<form method="POST">
+<form method="POST" use:enhance>
 	<label>
 		<input
 			class="w-full"
@@ -12,3 +12,7 @@
 
 	<button>Upload</button>
 </form>
+
+<script>
+	import { enhance } from '$app/forms'
+</script>
