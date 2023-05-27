@@ -1,8 +1,10 @@
 <h1>🤳 art.wall 🖼️</h1>
 
-{#if media}
-	<img src={media.image} alt={media.title || ''}>
-{/if}
+<div class="grid grid-cols-3 gap-4">
+	{#each media as { image, title }}
+		<img src={image} alt={title || ''}>
+	{/each}
+</div>
 
 <aside class="fixed bottom-0 left-0 p-4">
 	<Uploader/>
@@ -12,5 +14,5 @@
 	import Uploader from '$lib/Uploader.svelte'
 	import { page } from '$app/stores'
 
-	$: media = $page.form?.media as App.Media || null
+	$: media = ($page.form?.media || $page.data?.media || []) as App.Media[]
 </script>
