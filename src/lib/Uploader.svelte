@@ -1,12 +1,11 @@
-<form method="POST" use:enhance>
+<form method="POST" action="?/upload" use:enhance>
 	<label>
 		<input
 			class="w-full"
 			name="url"
 			type="url"
-			pattern="https://.+"
 			placeholder="https://example.com/"
-			value="https://twitter.com/frantzfries/status/1659402597109841921?s=20"
+			required
 		/>
 	</label>
 

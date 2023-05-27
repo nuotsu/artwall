@@ -1,9 +1,16 @@
-import type { Actions } from './$types'
+import type { Actions, PageServerLoad } from './$types'
 import { JSDOM } from 'jsdom'
 
+export const load = (async ({ url }) => {
+	if (url.searchParams.has('json')) {
+		return {
+			json: JSON.parse(url.searchParams.get('json') as string),
+		}
+	}
+}) satisfies PageServerLoad
 
 export const actions = {
-	default: async ({ request, cookies }) => {
+	upload: async ({ request, cookies }) => {
 		const data = await request.formData()
 		const url = data.get('url') as string
 
@@ -30,5 +37,11 @@ export const actions = {
 		return {
 			media: updatedMedia,
 		}
-	}
+	},
+
+	share: async ({ cookies }) => {
+		return {
+			json: cookies.get('artwall-media') as string ?? '[]',
+		}
+	},
 } satisfies Actions
