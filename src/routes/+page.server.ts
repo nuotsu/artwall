@@ -44,4 +44,18 @@ export const actions = {
 			json: cookies.get('artwall-media') as string ?? '[]',
 		}
 	},
+
+	delete: async ({ request, cookies }) => {
+		const data = await request.formData()
+		const url = data.get('url') as string
+
+		const oldMedia = JSON.parse(cookies.get('artwall-media') as string ?? '[]') as App.Media[]
+		const updatedMedia = [...oldMedia].filter(media => media.url !== url)
+
+		cookies.set('artwall-media', JSON.stringify(updatedMedia))
+
+		return {
+			media: updatedMedia,
+		}
+	},
 } satisfies Actions

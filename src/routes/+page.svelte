@@ -1,6 +1,9 @@
 <section class="grid gap-4">
-	{#each json || media as { image, title }}
-		<img src={image} alt={title || ''}>
+	{#each json || media as { url, image, title }}
+		<figure>
+			<img src={image} alt={title || ''}>
+			<Delete {url} />
+		</figure>
 	{/each}
 </section>
 
@@ -18,6 +21,7 @@
 </style>
 
 <script lang="ts">
+	import Delete from '$lib/Delete.svelte'
 	import Uploader from '$lib/Uploader.svelte'
 	import Share from '$lib/Share.svelte'
 	import { page } from '$app/stores'
