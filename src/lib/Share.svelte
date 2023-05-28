@@ -1,6 +1,6 @@
 {#if hasData}
 	<button on:click={onclick}>
-		Share
+		📲 Share
 	</button>
 {/if}
 

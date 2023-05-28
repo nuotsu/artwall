@@ -9,14 +9,16 @@
 </div>
 
 {#if !json}
-	<aside class="fixed bottom-0 left-0 m-2 p-2 bg-white/80 backdrop-blur-sm">
-		<Uploader/>
-		<Share/>
+	<aside class="sticky bottom-0">
+		<div class="sm:fixed bottom-0 left-0 sm:m-2 p-2 bg-white/80 backdrop-blur-sm">
+			<Upload/>
+			<Share/>
+		</div>
 	</aside>
 {/if}
 
 <script lang="ts">
-	import Uploader from '$lib/Uploader.svelte'
+	import Upload from '$lib/Upload.svelte'
 	import Share from '$lib/Share.svelte'
 	import { page } from '$app/stores'
 	import '../styles/app.css'

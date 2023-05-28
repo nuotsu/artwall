@@ -5,7 +5,7 @@
 />
 
 <figure
-	class="sm:absolute sm:w-[300px] bg-white/80 backdrop-blur-sm"
+	class="sm:absolute sm:w-[300px] bg-white/80 backdrop-blur-sm transition-transform duration-100"
 	style:left="{left}%"
 	style:top="{top}%"
 >
@@ -20,7 +20,7 @@
 	/>
 
 	{#if title}
-		<blockquote>
+		<blockquote class="p-2">
 			<p>{title}</p>
 		</blockquote>
 	{/if}
@@ -51,6 +51,10 @@
 	}
 	.grabber:active {
 		cursor: grabbing;
+	}
+
+	figure:has(.grabber:active) {
+		@apply rotate-2;
 	}
 </style>
 

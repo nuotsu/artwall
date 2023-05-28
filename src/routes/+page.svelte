@@ -1,4 +1,4 @@
-<section class="sm:relative grow">
+<section class="sm:relative grow grid gap-4">
 	{#each json || media as m (m.url)}
 		<Media media={m} editable={!json} />
 	{/each}
