@@ -1,5 +1,5 @@
 <form method="POST" action="?/delete" use:enhance>
-	<input name="url" type="hidden" value={url}>
+	<input name="url" value={url} type="hidden">
 
 	<button on:click={onclick} title="Delete">
 		🗑️
