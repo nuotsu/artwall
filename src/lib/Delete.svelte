@@ -1,7 +1,7 @@
 <form method="POST" action="?/delete" use:enhance>
 	<input name="url" type="hidden" value={url}>
 
-	<button on:click={onclick}>
+	<button on:click={onclick} title="Delete">
 		🗑️
 	</button>
 </form>
@@ -12,7 +12,7 @@
 	export let url: App.Media['url']
 
 	function onclick(e: MouseEvent) {
-		if (!confirm('Are you sure you want to delete this?')) {
+		if (!confirm(`Are you sure you want to delete:\n\n${ url }?`)) {
 			e.preventDefault()
 		}
 	}

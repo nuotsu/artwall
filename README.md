@@ -1,1 +1,1 @@
-# 🤳 art.wall 🖼️
+# 🤳 Art Wall 🖼️
