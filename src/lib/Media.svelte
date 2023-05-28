@@ -4,13 +4,14 @@
 />
 
 <figure
-	class="sm:absolute sm:w-[300px] bg-white/80 backdrop-blur-sm"
+	class="root sm:absolute sm:w-[300px] bg-white/80 backdrop-blur-sm"
 	style:left="{left}%"
 	style:top="{top}%"
 	on:mousedown={() => moving = true}
+	bind:this={root}
 >
-	<form method="POST" action="?/move">
-		<input value={url} type="url" readonly>
+	<form method="POST" action="?/move" bind:this={form} use:enhance hidden>
+		<input name="url" value={url} type="url" readonly>
 		<input name="left" value={left} type="number" readonly>
 		<input name="top" value={top} type="number" readonly>
 	</form>
@@ -42,6 +43,9 @@
 
 <script lang="ts">
 	import Delete from '$lib/Delete.svelte'
+	import { applyAction, deserialize, enhance } from '$app/forms'
+	import { invalidateAll } from '$app/navigation'
+	import type { ActionResult } from '@sveltejs/kit'
 
 	export let
 		media: App.Media,
@@ -63,7 +67,27 @@
 		top += (e.movementY / window.innerHeight * 100)
 	}
 
-	function mouseup() {
+	let root: HTMLElement
+
+	let form: HTMLFormElement
+	$: form
+
+	async function mouseup(e: MouseEvent) {
 		moving = false
+
+		if ((e.target as HTMLElement).closest('figure.root') !== root) return
+
+		const response = await fetch(`?/move`, {
+			method: 'POST',
+			body: new FormData(form),
+		})
+
+		const result: ActionResult = deserialize(await response.text())
+
+		if (result.type === 'success') {
+			await invalidateAll()
+		}
+
+		applyAction(result)
 	}
 </script>
