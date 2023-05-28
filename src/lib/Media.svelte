@@ -4,15 +4,15 @@
 />
 
 <figure
-	class="relative sm:absolute sm:w-[300px] bg-white/80 backdrop-blur-sm"
-	style:left="{left}px"
-	style:top="{top}px"
+	class="sm:absolute sm:w-[300px] bg-white/80 backdrop-blur-sm"
+	style:left="{left}%"
+	style:top="{top}%"
 	on:mousedown={() => moving = true}
 >
 	<form method="POST" action="?/move">
-		<input value={url} type="url">
-		<input name="left" value={left} type="text">
-		<input name="top" value={top} type="text">
+		<input value={url} type="url" readonly>
+		<input name="left" value={left} type="number" readonly>
+		<input name="top" value={top} type="number" readonly>
 	</form>
 
 	<img class="w-full" src={image || ''} alt={title || ''} draggable={false}>
@@ -49,6 +49,8 @@
 
 	$: ({ url, image, title, position: [x,y] } = media)
 
+	// TODO: need to disabled moving event on mobile
+
 	let moving = false
 
 	$: left = x
@@ -57,8 +59,8 @@
 	function mousemove(e: MouseEvent) {
 		if (!moving) return
 
-		left += e.movementX
-		top += e.movementY
+		left += (e.movementX / window.innerWidth * 100)
+		top += (e.movementY / window.innerHeight * 100)
 	}
 
 	function mouseup() {
