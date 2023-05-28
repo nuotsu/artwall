@@ -9,14 +9,9 @@
 	style:left="{left}%"
 	style:top="{top}%"
 >
-	<form method="POST" action="?/move" bind:this={form} use:enhance hidden>
-		<input name="url" value={url} type="url" readonly>
-		<input name="left" value={left} type="number" readonly>
-		<input name="top" value={top} type="number" readonly>
-	</form>
-
 	<img
-		class="grabber w-full cursor-grab active:cursor-grabbing"
+		class="w-full"
+		class:grabber={editable}
 		src={image || ''}
 		alt={title || ''}
 		draggable={false}
@@ -37,34 +32,48 @@
 
 		{#if editable}
 			<Delete {url} />
+
+			<form method="POST" action="?/move" bind:this={form} use:enhance hidden>
+				<Move {url} {left} {top} />
+			</form>
 		{/if}
 	</figcaption>
 </figure>
 
-<style>
+<style lang="postcss">
 	figure:not(:hover) figcaption {
 		display: none;
+	}
+
+	.grabber {
+		user-select: none;
+		cursor: grab;
+	}
+	.grabber:active {
+		cursor: grabbing;
 	}
 </style>
 
 <script lang="ts">
+	import Move, { move } from './Move.svelte'
 	import Delete from '$lib/Delete.svelte'
-	import { applyAction, deserialize, enhance } from '$app/forms'
-	import { invalidateAll } from '$app/navigation'
-	import type { ActionResult } from '@sveltejs/kit'
+	import { enhance } from '$app/forms'
 
 	export let
 		media: App.Media,
 		editable = false
 
 	$: ({ url, image, title, position: [x,y] } = media)
+	$: left = x
+	$: top = y
+
+	let form: HTMLFormElement
+	$: form
 
 	// TODO: need to disabled moving event on mobile
 
+	let grabber: HTMLElement
 	let moving = false
-
-	$: left = x
-	$: top = y
 
 	function mousemove(e: MouseEvent) {
 		if (!editable || !moving) return
@@ -73,29 +82,11 @@
 		top += (e.movementY / window.innerHeight * 100)
 	}
 
-	let grabber: HTMLElement
-
-	let form: HTMLFormElement
-	$: form
-
 	async function mouseup(e: MouseEvent) {
 		if (!editable || (e.target as HTMLElement).closest('.grabber') !== grabber) return
-
 		moving = false
 
-
-		const response = await fetch(`?/move`, {
-			method: 'POST',
-			body: new FormData(form),
-		})
-
-		const result: ActionResult = deserialize(await response.text())
-
-		if (result.type === 'success') {
-			await invalidateAll()
-		}
-
-		applyAction(result)
+		await move(form)
 	}
 
 	function mousedown() {

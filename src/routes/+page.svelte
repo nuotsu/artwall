@@ -4,6 +4,12 @@
 	{/each}
 </section>
 
+<style>
+	section:global(:has(figure:active)) :global(figure:not(:active)) {
+		pointer-events: none;
+	}
+</style>
+
 <script lang="ts">
 	import Media from '$lib/Media.svelte'
 	import { page } from '$app/stores'
