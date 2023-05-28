@@ -1,14 +1,13 @@
 <svelte:window
 	on:mousemove={mousemove}
 	on:mouseup={mouseup}
+	on:keyup={keyup}
 />
 
 <figure
-	class="root sm:absolute sm:w-[300px] bg-white/80 backdrop-blur-sm"
+	class="sm:absolute sm:w-[300px] bg-white/80 backdrop-blur-sm"
 	style:left="{left}%"
 	style:top="{top}%"
-	on:mousedown={() => moving = true}
-	bind:this={root}
 >
 	<form method="POST" action="?/move" bind:this={form} use:enhance hidden>
 		<input name="url" value={url} type="url" readonly>
@@ -16,7 +15,14 @@
 		<input name="top" value={top} type="number" readonly>
 	</form>
 
-	<img class="w-full" src={image || ''} alt={title || ''} draggable={false}>
+	<img
+		class="grabber w-full cursor-grab active:cursor-grabbing"
+		src={image || ''}
+		alt={title || ''}
+		draggable={false}
+		bind:this={grabber}
+		on:mousedown={mousedown}
+	/>
 
 	{#if title}
 		<blockquote>
@@ -24,12 +30,12 @@
 		</blockquote>
 	{/if}
 
-	<figcaption class="absolute top-0 right-0 flex bg-white/20 backdrop-blur-sm">
+	<figcaption class="cursor-default absolute top-0 right-0 px-2 py-1 flex gap-2 bg-white/20 backdrop-blur-sm">
 		<a href={url} target="_blank" rel="noopener noreferrer" title={new URL(url).hostname}>
 			🔗
 		</a>
 
-		{#if showDelete}
+		{#if editable}
 			<Delete {url} />
 		{/if}
 	</figcaption>
@@ -49,7 +55,7 @@
 
 	export let
 		media: App.Media,
-		showDelete = false
+		editable = false
 
 	$: ({ url, image, title, position: [x,y] } = media)
 
@@ -61,21 +67,22 @@
 	$: top = y
 
 	function mousemove(e: MouseEvent) {
-		if (!moving) return
+		if (!editable || !moving) return
 
 		left += (e.movementX / window.innerWidth * 100)
 		top += (e.movementY / window.innerHeight * 100)
 	}
 
-	let root: HTMLElement
+	let grabber: HTMLElement
 
 	let form: HTMLFormElement
 	$: form
 
 	async function mouseup(e: MouseEvent) {
+		if (!editable || (e.target as HTMLElement).closest('.grabber') !== grabber) return
+
 		moving = false
 
-		if ((e.target as HTMLElement).closest('figure.root') !== root) return
 
 		const response = await fetch(`?/move`, {
 			method: 'POST',
@@ -89,5 +96,15 @@
 		}
 
 		applyAction(result)
+	}
+
+	function mousedown() {
+		if (!editable) return
+		moving = true
+	}
+
+	function keyup(e: KeyboardEvent) {
+		if (!editable || e.key !== 'Escape') return
+		moving = false
 	}
 </script>

@@ -9,7 +9,7 @@
 </div>
 
 {#if !json}
-	<aside class="fixed bottom-0 left-0 m-4">
+	<aside class="fixed bottom-0 left-0 m-2 p-2 bg-white/80 backdrop-blur-sm">
 		<Uploader/>
 		<Share/>
 	</aside>

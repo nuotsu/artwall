@@ -1,6 +1,6 @@
 <section class="sm:relative grow">
 	{#each json || media as m (m.url)}
-		<Media media={m} showDelete={!json} />
+		<Media media={m} editable={!json} />
 	{/each}
 </section>
 
