@@ -1,4 +1,4 @@
-<form method="POST" action="?/upload" use:enhance {disabled}>
+<form method="POST" action="?/upload" use:enhance>
 	<label class="flex gap-[.5ch]">
 		🔗
 		<input
@@ -18,11 +18,11 @@
 	{/if}
 </form>
 
-<script>
+<script lang="ts">
 	import { enhance } from '$app/forms'
 	import { page } from '$app/stores'
 
-	const MAX = 10
+	const MAX = 10 as const
 
 	$: disabled = $page.data?.media?.length >= MAX
 </script>
